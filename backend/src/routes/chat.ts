@@ -58,7 +58,7 @@ router.post('/send', protect, sendMessageValidation, async (req: Request, res: R
     let chat = await Chat.findOne({ userId, isActive: true });
     
     if (!chat) {
-      chat = new Chat({
+      chat = await Chat.create({
         userId,
         messages: [],
         totalTokens: 0
@@ -75,7 +75,7 @@ router.post('/send', protect, sendMessageValidation, async (req: Request, res: R
     (chat as any).addMessage(userMessage);
 
     // Preparar mensajes para OpenAI
-    const openAIMessages: ChatMessage[] = chat.messages.map(msg => ({
+    const openAIMessages: ChatMessage[] = chat.messages.map((msg: IMessage) => ({
       role: msg.role,
       content: msg.content
     }));

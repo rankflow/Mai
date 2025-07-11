@@ -75,4 +75,28 @@ chatSchema.methods['getMessageCount'] = function(): number {
   return this['messages'].length;
 };
 
-export const Chat = mongoose.model<IChat>('Chat', chatSchema); 
+// --- MODELO REAL DE MONGOOSE ---
+
+// --- EXPORTACIÓN SEGÚN ENTORNO ---
+const isDev = process.env['NODE_ENV'] === 'development';
+
+console.log('🔍 Verificando entorno Chat:', {
+  NODE_ENV: process.env['NODE_ENV'],
+  isDev: isDev,
+  readyState: mongoose.connection.readyState
+});
+
+let Chat: any;
+
+if (isDev) {
+  console.log('🟢 Usando MOCK separado de Chat en desarrollo');
+  const { ChatMock } = require('../mocks/ChatMock');
+  Chat = ChatMock;
+} else {
+  console.log('🔴 Usando modelo real de Chat');
+  Chat = (mongoose.models as any).Chat || mongoose.model<IChat>('Chat', chatSchema);
+}
+
+console.log('📦 Modelo Chat exportado:', typeof Chat, Chat ? '✅' : '❌');
+
+export { Chat }; 

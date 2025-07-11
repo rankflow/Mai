@@ -116,6 +116,29 @@ router.post('/login', loginValidation, async (req: Request, res: Response) => {
 
     const { email, password } = req.body;
 
+    // Login de desarrollador en modo desarrollo
+    if (
+      process.env['NODE_ENV'] === 'development' &&
+      email === 'dev@mai.com' &&
+      password === 'dev1234'
+    ) {
+      const token = generateToken('dev-user-id');
+      return res.json({
+        success: true,
+        message: 'Login de desarrollador exitoso',
+        data: {
+          user: {
+            id: 'dev-user-id',
+            email: 'dev@mai.com',
+            username: 'dev',
+            tokens: 9999,
+            lastLogin: new Date()
+          },
+          token
+        }
+      });
+    }
+
     // Buscar usuario
     const user = await User.findOne({ email });
     if (!user) {

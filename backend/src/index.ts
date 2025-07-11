@@ -9,6 +9,8 @@ import rateLimit from 'express-rate-limit';
 // Cargar variables de entorno PRIMERO
 dotenv.config();
 
+console.log('NODE_ENV:', process.env['NODE_ENV']);
+
 import { connectDB } from './config/database';
 import { errorHandler } from './middleware/errorHandler';
 import { notFound } from './middleware/notFound';

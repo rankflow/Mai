@@ -38,8 +38,8 @@ export const protect = async (req: Request, res: Response, next: NextFunction): 
     console.log(' Token decodificado:', decoded);
     console.log('🆔 ID del usuario:', decoded.id);
     
-    // Usar require para mantener consistencia con el mock
-    const { User } = require('../models/User');
+    // Importar el modelo User
+    const { User } = await import('../models/User');
     const user = await User.findById(decoded.id);
     
     // 🔍 LOG: Usuario encontrado
